@@ -30,22 +30,7 @@ def bkground(screen, color1, color2, y):
     rect(screen, color1,(0, y, xsize, ysize))
     rect(screen, color2, (0, 0, xsize, y))
 
-
-def circles_sheet(screen,
-                  x, y, height, R,
-                  color_sheet):
-    '''
-    рисует листья дерева
-    x, y - координаты центра круга
-    height - высота дерева
-    R - радиус окружности
-    color_sheet - цвет листьев
-    '''
-    y0 = y - height
-    circle(screen, color_sheet, (x0, y0 - R), R)
-    circle(screen, color_sheet, (x0, y0 + R), R)
     
-
 def house(screen,
           x, y,
           width, height,
@@ -84,8 +69,10 @@ def tree(screen,
     R = 60
     xall = (x, x - width, x + width, x - width, x + width, x)
     yall = (y0 - R, y0- 25, y0 - 25, y0 - 2 * R, y0 - 2 * R)
-    for j, i in xall, yall:
-    circle(screen, color_sheet, (j, i), R)
+    for k in range(0, 5):
+        i = yall[k]
+        j = xall[k]
+        circle(screen, color_sheet, (j, i), R)
 
 
 def clouds(screen,
@@ -112,6 +99,7 @@ pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
 
+
 while not finished:
     clock.tick(FPS)
     for event in pygame.event.get():
@@ -119,3 +107,4 @@ while not finished:
             finished = True
 
 pygame.quit()
+
