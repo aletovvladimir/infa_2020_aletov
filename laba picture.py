@@ -67,9 +67,9 @@ def tree(screen,
     y0 = y - height
     rect(screen, color_tree, (x0, y0, width, height))
     R = 60
-    xall = (x, x - width, x + width, x - width, x + width, x)
-    yall = (y0 - R, y0- 25, y0 - 25, y0 - 2 * R, y0 - 2 * R)
-    for k in range(0, 5):
+    xall = (x, x - width, x + width, x - width, x + width, x, x)
+    yall = (y0 - 3 * R, y0- 25, y0 - 25, y0 - 2 * R, y0 - 2 * R, y0 - R)
+    for k in range(0, 6):
         i = yall[k]
         j = xall[k]
         circle(screen, color_sheet, (j, i), R)
@@ -107,4 +107,3 @@ while not finished:
             finished = True
 
 pygame.quit()
-
