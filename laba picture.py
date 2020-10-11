@@ -23,10 +23,7 @@ def main():
     screen = pygame.display.set_mode((X_SIZE, Y_SIZE))
     screen.fill(GRAY)
 
-    bkground(screen, GREEN, BLUE, 400)
-    house(screen, 250, 600, 275, 225, BROWN, RED, LIGHT_BLUE)
-    tree(screen, 550, 750, 50, 150, BLACK, DARK_GREEN)
-    clouds(screen, 500, 200, WHITE)
+    draw_scene(screen)
 
     pygame.display.update()
     clock = pygame.time.Clock()
@@ -41,15 +38,24 @@ def main():
     pygame.quit()
 
 
-def bkground(screen, color1, color2, y):
+def draw_scene(screen):
+    sky_height = Y_SIZE // 2
+
+    draw_background(screen, GREEN, BLUE, sky_height)
+    house(screen, 250, 600, 275, 225, BROWN, RED, LIGHT_BLUE)
+    tree(screen, 550, 750, 50, 150, BLACK, DARK_GREEN)
+    clouds(screen, 500, 200, WHITE)
+
+
+def draw_background(screen, grass_color, sky_color, sky_height):
     '''
     screen - экран отображения
-    color1 - цвет земли
-    color2 - цвет неба
-    y - координата начала земли
+    grass_color - цвет земли
+    sky_color - цвет неба
+    sky_height - координата начала земли
     '''
-    rect(screen, color1, (0, y, X_SIZE, Y_SIZE))
-    rect(screen, color2, (0, 0, X_SIZE, y))
+    rect(screen, grass_color, (0, sky_height, X_SIZE, Y_SIZE))
+    rect(screen, sky_color, (0, 0, X_SIZE, sky_height))
 
 
 def house(screen,
