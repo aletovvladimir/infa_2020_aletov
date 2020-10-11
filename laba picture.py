@@ -40,25 +40,38 @@ def main():
 
 def draw_scene(screen):
     sky_height = 2 * Y_SIZE // 3
+
     house_x_coord, house_y_coord = X_SIZE // 5, 3 * Y_SIZE // 4
     house_width, house_height = X_SIZE // 4, Y_SIZE // 3
 
-    draw_background(screen, GREEN, BLUE, sky_height)
+    tree_x_coord, tree_y_coord = 3 * X_SIZE // 4, 7 * Y_SIZE // 8
+    tree_width, tree_height = X_SIZE // 20, Y_SIZE // 3
+
+    cloud_x, cloud_y = X_SIZE // 2, Y_SIZE // 4
+
+    draw_background(screen,
+                    GREEN, BLUE,
+                    sky_height)
     draw_house(screen,
                house_x_coord, house_y_coord,
                house_width, house_height,
                BROWN, RED, LIGHT_BLUE)
-    tree(screen, 550, 750, 50, 150, BLACK, DARK_GREEN)
-    clouds(screen, 500, 200, WHITE)
+    draw_clouds(screen,
+           cloud_x, cloud_y,
+           WHITE)
+    draw_tree(screen,
+              tree_x_coord, tree_y_coord,
+              tree_width, tree_height,
+              BLACK, DARK_GREEN)
 
 
 def draw_background(screen, grass_color, sky_color, sky_height):
-    '''
+    """
     screen - экран отображения
     grass_color - цвет земли
     sky_color - цвет неба
     sky_height - координата начала земли
-    '''
+    """
     rect(screen, grass_color, (0, sky_height, X_SIZE, Y_SIZE))
     rect(screen, sky_color, (0, 0, X_SIZE, sky_height))
 
@@ -67,12 +80,12 @@ def draw_house(screen,
                x, y,
                width, height,
                color_house, color_roof, color_window):
-    '''
+    """
     рисует дом
     x, y - координаты середины нижней стороны
     height, width - полная высота и ширина дома
     color_house, color_roof, color_window - цвета дома, крыши и окна соответсвенно
-    '''
+    """
     half_width = width // 2
     half_height = height // 2
 
@@ -96,41 +109,48 @@ def draw_house(screen,
     rect(screen, color_window, (x0_wind, y0_wind, wind_width, wind_height))
 
 
-def tree(screen,
-         x, y,
-         width, height,
-         color_tree, color_sheet):
-    '''
+def draw_tree(screen,
+              x, y,
+              width, height,
+              color_tree, color_sheet):
+    """
     рисует дерево
     x, y - координаты середины нижней стороны ствола
     width, height - ширина и высота дерева
     color_tree, color_sheet - цвет ствола и листьев соотвественно
-    '''
-    x0 = x - int(width / 2)
+    """
+    x0 = x - width // 2
     y0 = y - height
+    sheet_radius = min(X_SIZE, Y_SIZE) // 13
+
+    sheet_coordinates = [
+        (x, y0 - 3 * sheet_radius),
+        (x - width, y0 - sheet_radius // 2),
+        (x + width, y0 - sheet_radius // 2),
+        (x - width, y0 - 2 * sheet_radius),
+        (x + width, y0 - 2 * sheet_radius),
+        (x, y0 - sheet_radius)
+    ]
+
     rect(screen, color_tree, (x0, y0, width, height))
-    R = 60
-    xall = (x, x - width, x + width, x - width, x + width, x, x)
-    yall = (y0 - 3 * R, y0 - 25, y0 - 25, y0 - 2 * R, y0 - 2 * R, y0 - R)
-    for k in range(0, 6):
-        i = yall[k]
-        j = xall[k]
-        circle(screen, color_sheet, (j, i), R)
+    for sheet_x, sheet_y in sheet_coordinates:
+        circle(screen, color_sheet, (sheet_x, sheet_y), sheet_radius)
 
 
-def clouds(screen,
+def draw_clouds(screen,
            x, y,
            color_cloud):
-    '''
+    """
     рисует облака
     x, y - координаты "центра облака"
     color_cloud - цвет облака
-    '''
-    R = 50
-    for i in range(0, 10):
-        x0 = randint(x - R, x + R)
-        y0 = randint(y - R, y + R)
-        circle(screen, color_cloud, (x0, y0), R)
+    """
+    cloud_radius = min(X_SIZE, Y_SIZE) // 15
+    num_of_circle_in_cloud = 10
+    for i in range(num_of_circle_in_cloud):
+        x0 = randint(x - cloud_radius, x + cloud_radius)
+        y0 = randint(y - cloud_radius, y + cloud_radius)
+        circle(screen, color_cloud, (x0, y0), cloud_radius)
 
 
 main()
