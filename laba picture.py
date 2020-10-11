@@ -39,10 +39,15 @@ def main():
 
 
 def draw_scene(screen):
-    sky_height = Y_SIZE // 2
+    sky_height = 2 * Y_SIZE // 3
+    house_x_coord, house_y_coord = X_SIZE // 5, 3 * Y_SIZE // 4
+    house_width, house_height = X_SIZE // 4, Y_SIZE // 3
 
     draw_background(screen, GREEN, BLUE, sky_height)
-    house(screen, 250, 600, 275, 225, BROWN, RED, LIGHT_BLUE)
+    draw_house(screen,
+               house_x_coord, house_y_coord,
+               house_width, house_height,
+               BROWN, RED, LIGHT_BLUE)
     tree(screen, 550, 750, 50, 150, BLACK, DARK_GREEN)
     clouds(screen, 500, 200, WHITE)
 
@@ -58,25 +63,36 @@ def draw_background(screen, grass_color, sky_color, sky_height):
     rect(screen, sky_color, (0, 0, X_SIZE, sky_height))
 
 
-def house(screen,
-          x, y,
-          width, height,
-          color_house, color_roof, color_window):
+def draw_house(screen,
+               x, y,
+               width, height,
+               color_house, color_roof, color_window):
     '''
     рисует дом
     x, y - координаты середины нижней стороны
     height, width - полная высота и ширина дома
     color_house, color_roof, color_window - цвета дома, крыши и окна соответсвенно
     '''
-    x0 = x - int(width / 2)
-    y0 = y - int(height / 2)
-    wind_width = int(width / 2)
-    wind_height = int(height / 3)
-    x0_wind = x - int(wind_width / 2)
-    y0_wind = y - int(height / 4)
-    rect(screen, color_house, (x0, y0,
-                               width, height))
-    polygon(screen, color_roof, [(x0, y0), (x, y - height), (x0 + width, y0)])
+    half_width = width // 2
+    half_height = height // 2
+
+    x0 = x - half_width
+    y0 = y - half_height
+
+    wind_width = half_width
+    wind_height = half_height // 2
+
+    x0_wind = x - wind_width // 2
+    y0_wind = y - half_height // 2
+
+    roof_coordinates = [
+        (x0, y0),
+        (x, y - height),
+        (x0 + width, y0)
+    ]
+
+    rect(screen, color_house, (x0, y0, width, height))
+    polygon(screen, color_roof, roof_coordinates)
     rect(screen, color_window, (x0_wind, y0_wind, wind_width, wind_height))
 
 
