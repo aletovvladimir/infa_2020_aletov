@@ -5,6 +5,7 @@ from random import randint
 FPS = 30
 X_SIZE, Y_SIZE = 1000, 800
 
+WHITE_ALPHA = (255, 255, 255, 0)
 WHITE = (255, 255, 255)
 GRAY = (210, 210, 210)
 RED = (220, 20, 20)
@@ -41,28 +42,143 @@ def main():
 def draw_scene(screen):
     sky_height = 2 * Y_SIZE // 3
 
-    house_x_coord, house_y_coord = X_SIZE // 5, 3 * Y_SIZE // 4
-    house_width, house_height = X_SIZE // 4, Y_SIZE // 3
+    sizes_of_houses = [
+        (X_SIZE // 4, 2 * Y_SIZE // 5),
+        (X_SIZE // 6, Y_SIZE // 5)
+    ]
 
-    tree_x_coord, tree_y_coord = 3 * X_SIZE // 4, 7 * Y_SIZE // 8
-    tree_width, tree_height = X_SIZE // 20, Y_SIZE // 3
+    positions_of_houses = [
+        (X_SIZE // 15, 3 * Y_SIZE // 7),
+        (4 * X_SIZE // 7, 4 * Y_SIZE // 7)
+    ]
 
-    cloud_x, cloud_y = X_SIZE // 2, Y_SIZE // 4
+    positions_of_clouds = [
+        (X_SIZE // 5, Y_SIZE // 6),
+        (3 * X_SIZE // 5, Y_SIZE // 4),
+        (8 * X_SIZE // 9, Y_SIZE // 8),
+        (0, 0),
+        (X_SIZE // 2, 0)
+    ]
+
+    sizes_of_trees = [
+        (X_SIZE // 3, Y_SIZE // 2),
+        (X_SIZE // 3, Y_SIZE // 2)
+    ]
+
+    positions_of_trees = [
+        (X_SIZE // 4, Y_SIZE // 3),
+        (5 * X_SIZE // 7, 4 * Y_SIZE // 10)
+    ]
 
     draw_background(screen,
                     GREEN, BLUE,
                     sky_height)
-    draw_house(screen,
-               house_x_coord, house_y_coord,
-               house_width, house_height,
-               BROWN, RED, LIGHT_BLUE)
-    draw_clouds(screen,
-           cloud_x, cloud_y,
-           WHITE)
-    draw_tree(screen,
-              tree_x_coord, tree_y_coord,
-              tree_width, tree_height,
-              BLACK, DARK_GREEN)
+
+    for position in positions_of_clouds:
+        cloud = make_cloud(WHITE)
+        draw_surface(screen, cloud, position)
+
+    for size, position in zip(sizes_of_houses, positions_of_houses):
+        house = make_house(size, BROWN, RED, LIGHT_BLUE)
+        draw_surface(screen, house, position)
+
+    for size, position in zip(sizes_of_trees, positions_of_trees):
+        tree = make_tree(size, BLACK, DARK_GREEN)
+        draw_surface(screen, tree, position)
+
+
+def make_house(size, color_house, color_roof, color_window):
+    """
+    Makes a surface of house
+    :param size: full width and height of the house
+    :param color_house: color of the house
+    :param color_roof: color of the house's roof
+    :param color_window: color of the house's window
+    :return: surface of the house
+    """
+    width, height = size
+    half_width = width // 2
+    half_height = height // 2
+
+    x0 = 0
+    y0 = half_height
+
+    wind_width = half_width
+    wind_height = half_height // 2
+
+    x0_wind = half_width - wind_width // 2
+    y0_wind = height - 3 * half_height // 4
+
+    roof_coordinates = [
+        (x0, y0),
+        (half_width, 0),
+        (x0 + width, y0)
+    ]
+
+    house = pygame.Surface((width, height), pygame.SRCALPHA)
+    house.fill(WHITE_ALPHA)
+
+    rect(house, color_house, (x0, y0, width, half_height))
+    polygon(house, color_roof, roof_coordinates)
+    rect(house, color_window, (x0_wind, y0_wind, wind_width, wind_height))
+
+    return house
+
+
+def make_tree(size, color_tree, color_sheet):
+    """
+    makes a surface of a tree
+    :param size: full width and height of the tree
+    :param color_tree: color of the trunk
+    :param color_sheet: color of the sheets
+    :return: surface of a tree
+    """
+    width, height = size
+    half_width = width // 2
+
+    x0 = half_width
+    sheet_radius = width // 6
+    half_trunk_width = width // 8
+
+    sheet_coordinates = [
+        (x0, sheet_radius),
+        (half_width - half_trunk_width, 2 * sheet_radius),
+        (half_width + half_trunk_width, 3 * sheet_radius),
+        (half_width - half_trunk_width, 3 * sheet_radius),
+        (half_width + half_trunk_width, 2 * sheet_radius),
+        (x0, 4 * sheet_radius)
+    ]
+
+    tree = pygame.Surface((width, height), pygame.SRCALPHA)
+    tree.fill(WHITE_ALPHA)
+
+    rect(tree, color_tree, (x0 - half_trunk_width, height // 2, 2 * half_trunk_width, height))
+    for sheet_x, sheet_y in sheet_coordinates:
+        circle(tree, color_sheet, (sheet_x, sheet_y), sheet_radius)
+
+    return tree
+
+
+def make_cloud(color_cloud):
+    """
+    makes a surface of a cloud
+    :param color_cloud: color of the cloud
+    :return: surface of the cloud
+    """
+    cloud_radius = min(X_SIZE, Y_SIZE) // 15
+    width = height = cloud_radius * 5
+    quarter_size = height // 4
+    num_of_circle_in_cloud = 10
+
+    cloud = pygame.Surface((width, height), pygame.SRCALPHA)
+    cloud.fill(WHITE_ALPHA)
+
+    for i in range(num_of_circle_in_cloud):
+        x0 = randint(quarter_size, width - quarter_size)
+        y0 = randint(quarter_size, height - quarter_size)
+        circle(cloud, color_cloud, (x0, y0), cloud_radius)
+
+    return cloud
 
 
 def draw_background(screen, grass_color, sky_color, sky_height):
@@ -76,81 +192,15 @@ def draw_background(screen, grass_color, sky_color, sky_height):
     rect(screen, sky_color, (0, 0, X_SIZE, sky_height))
 
 
-def draw_house(screen,
-               x, y,
-               width, height,
-               color_house, color_roof, color_window):
+def draw_surface(screen, surface, position):
     """
-    рисует дом
-    x, y - координаты середины нижней стороны
-    height, width - полная высота и ширина дома
-    color_house, color_roof, color_window - цвета дома, крыши и окна соответсвенно
+    draws a surface on an active one
+    :param screen: active surface
+    :param surface: surface to draw
+    :param position: position of top left corner of the surface
+    :return: none
     """
-    half_width = width // 2
-    half_height = height // 2
-
-    x0 = x - half_width
-    y0 = y - half_height
-
-    wind_width = half_width
-    wind_height = half_height // 2
-
-    x0_wind = x - wind_width // 2
-    y0_wind = y - half_height // 2
-
-    roof_coordinates = [
-        (x0, y0),
-        (x, y - height),
-        (x0 + width, y0)
-    ]
-
-    rect(screen, color_house, (x0, y0, width, height))
-    polygon(screen, color_roof, roof_coordinates)
-    rect(screen, color_window, (x0_wind, y0_wind, wind_width, wind_height))
-
-
-def draw_tree(screen,
-              x, y,
-              width, height,
-              color_tree, color_sheet):
-    """
-    рисует дерево
-    x, y - координаты середины нижней стороны ствола
-    width, height - ширина и высота дерева
-    color_tree, color_sheet - цвет ствола и листьев соотвественно
-    """
-    x0 = x - width // 2
-    y0 = y - height
-    sheet_radius = min(X_SIZE, Y_SIZE) // 13
-
-    sheet_coordinates = [
-        (x, y0 - 3 * sheet_radius),
-        (x - width, y0 - sheet_radius // 2),
-        (x + width, y0 - sheet_radius // 2),
-        (x - width, y0 - 2 * sheet_radius),
-        (x + width, y0 - 2 * sheet_radius),
-        (x, y0 - sheet_radius)
-    ]
-
-    rect(screen, color_tree, (x0, y0, width, height))
-    for sheet_x, sheet_y in sheet_coordinates:
-        circle(screen, color_sheet, (sheet_x, sheet_y), sheet_radius)
-
-
-def draw_clouds(screen,
-           x, y,
-           color_cloud):
-    """
-    рисует облака
-    x, y - координаты "центра облака"
-    color_cloud - цвет облака
-    """
-    cloud_radius = min(X_SIZE, Y_SIZE) // 15
-    num_of_circle_in_cloud = 10
-    for i in range(num_of_circle_in_cloud):
-        x0 = randint(x - cloud_radius, x + cloud_radius)
-        y0 = randint(y - cloud_radius, y + cloud_radius)
-        circle(screen, color_cloud, (x0, y0), cloud_radius)
+    screen.blit(surface, position)
 
 
 main()
