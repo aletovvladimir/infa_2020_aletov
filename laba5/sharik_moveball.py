@@ -1,7 +1,10 @@
+from random import randint
+
 import pygame
 from pygame.draw import *
-from random import randint
-pygame.init()
+
+XSIZE, YSIZE = 1200, 900
+FPS = 1
 
 RED = (200, 10, 10)
 GREEN = (10, 200, 10)
@@ -22,11 +25,12 @@ COLOR = [RED,
          WHITE,
          SALAD]
 
-xsize, ysize = 1200, 900
-FPS = 2
+
 points = 0
 finish = False
-screen = pygame.display.set_mode((xsize, ysize))
+
+pygame.init()
+screen = pygame.display.set_mode((XSIZE, YSIZE))
 clock = pygame.time.Clock()
 
 x = randint(100, 1000)
@@ -37,20 +41,18 @@ color = COLOR[randint(0,7)]
 def click():
     return (event.pos[0] - x)**2 + (y-event.pos[1])**2 <= r**2
 
+
 def new_ball(x0, y0, r0):
     circle(screen,color,(x,y),r)
     pygame.display.update()
     screen.fill(BLACK)
     x0 += 10
-    y0 += 10
+    y0 +=10
     
     
-
-
-
-
 new_ball(x,y,r)
 pygame.display.update()
+
 while not finish:
     x += 10
     y += 10
@@ -68,5 +70,3 @@ pygame.quit()
 
    
     
-
-
