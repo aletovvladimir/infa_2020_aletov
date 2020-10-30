@@ -46,10 +46,8 @@ def new_ball(x0, y0, r0):
     circle(screen,color,(x,y),r)
     pygame.display.update()
     screen.fill(BLACK)
-    x0 += 10
-    y0 +=10
-    
-    
+
+        
 new_ball(x,y,r)
 pygame.display.update()
 
