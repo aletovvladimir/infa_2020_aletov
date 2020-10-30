@@ -23,7 +23,7 @@ COLOR = [RED,
          SALAD]
 
 xsize, ysize = 1200, 900
-FPS = 1
+FPS = 2
 points = 0
 finish = False
 screen = pygame.display.set_mode((xsize, ysize))
@@ -42,7 +42,7 @@ def new_ball(x0, y0, r0):
     pygame.display.update()
     screen.fill(BLACK)
     x0 += 10
-    y0 +=10
+    y0 += 10
     
     
 
