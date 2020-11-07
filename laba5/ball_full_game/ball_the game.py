@@ -30,6 +30,9 @@ screen = pygame.display.set_mode((width, length))
     
 
 def text() :
+    '''
+    make a text after the game
+    '''
     f1 = pygame.font.Font(None, 15*size )
     text1 = f1.render('victory', 1, (180, 0, 0))
     screen.blit(text1, (int(width/2 - 25*size), int(length/2 - 15*size)))
@@ -52,6 +55,9 @@ def text() :
 
     
 class Ball:
+    '''
+    make a new ball which you need to catch
+    '''
     
     def __init__(self, width, length):
         self.r = randint(10, 75)
@@ -84,6 +90,9 @@ class Ball:
         self.r = 0
 
 class Flower:
+    '''
+    special model of Balls
+    '''
         
     def __init__(self, width, length):
         self.r = randint(8, 25)
@@ -95,7 +104,7 @@ class Flower:
         self.r  = int(self.r/2)
         
         
-    def draw(self):   
+    def draw(self):
         circle(screen, self.color, (self.x + self.r, self.y), self.r)
         circle(screen, self.color, (self.x - self.r, self.y), self.r)
         circle(screen, self.color, (self.x, self.y + self.r), self.r)
